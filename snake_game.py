@@ -9,11 +9,12 @@ green = (0, 255, 0)
 blue = (0, 0, 128)
 black = (0, 0, 0)
 red = (255, 0, 0)
-#snake_length = 10
+# snake_length = 10
 snake_width = 10
 snake_x = width / 2
 snake_y = height / 2
-velocity = 10
+velocity_x = 0
+velocity_y = 0
 fruit_rad = 5
 
 clock = pygame.time.Clock()
@@ -32,20 +33,25 @@ def draw_snake(snake_width, snakes):
 
 
 def snake_move():
-    global snake_x, snake_y
+    global velocity_x, velocity_y
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and snake_x > 0:
-        snake_x -= velocity
+    if keys[pygame.K_LEFT] and snake_x >= 5:
+        velocity_x = -10
+        velocity_y = 0
 
-    if keys[pygame.K_RIGHT] and snake_x < width - snake_width:
-        snake_x += velocity
+    elif keys[pygame.K_RIGHT] and snake_x < width - snake_width:
+        velocity_x = 10
+        velocity_y = 0
 
-    if keys[pygame.K_UP] and snake_y > 0:
-        snake_y -= velocity
+    elif keys[pygame.K_UP] and snake_y > 0:
+        velocity_y = -10
+        velocity_x = 0
 
-    if keys[pygame.K_DOWN] and snake_y < height - snake_width:
-        snake_y += velocity
+    elif keys[pygame.K_DOWN] and snake_y < height - snake_width:
+        velocity_y = 10
+        velocity_x = 0
+
 
 snakes = []
 snake_length = 1
@@ -56,19 +62,13 @@ while True:
             pygame.quit()
             quit()
 
-    draw_snake(snake_width, snakes)
-    snakes.append([snake_x, snake_y])
+    draw_fruit(fruit_x, fruit_y)
     snake_move()
 
-
-
-
-    if len(snakes) > snake_length:
-        del snakes[0]
-
-
-    draw_fruit(fruit_x, fruit_y)
-
+    snake_x += velocity_x
+    snake_y += velocity_y
+    snakes.append([snake_x, snake_y])
+    draw_snake(snake_width, snakes)
 
     if fruit_x - fruit_rad < snake_x + (snake_width / 2) and fruit_x + fruit_rad > snake_x - (snake_width / 2) \
             and fruit_y - fruit_rad < snake_y + (snake_width / 2) and fruit_y + fruit_rad > snake_y - (snake_width / 2):
@@ -76,6 +76,9 @@ while True:
         fruit_y = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
         draw_fruit(fruit_x, fruit_y)
         snake_length += 1
+
+    if len(snakes) > snake_length:
+        del snakes[0]
 
     pygame.display.update()
     clock.tick(10)
