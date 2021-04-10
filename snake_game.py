@@ -1,4 +1,5 @@
-import pygame
+import pygame, random
+
 pygame.init()
 (width, height) = (400, 400)
 screen = pygame.display.set_mode((width, height))
@@ -9,18 +10,27 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 snake_length = 10
 snake_width = 10
-snake_x = width/2
-snake_y = height/2
+snake_x = width / 2
+snake_y = height / 2
 velocity = 10
+fruit_rad = 5
+
 clock = pygame.time.Clock()
+
+fruit_x = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+fruit_y = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+
+
+def draw_fruit(fruit_x, fruit_y):
+    pygame.draw.circle(screen, green, (fruit_x, fruit_y), fruit_rad)
 
 
 def draw_snake(snake_x, snake_y, snake_length, snake_width):
     pygame.draw.rect(screen, red, (snake_x, snake_y, snake_length, snake_width))
 
+
 def snake_move():
     global snake_x, snake_y
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and snake_x > 0:
         snake_x -= velocity
@@ -34,6 +44,7 @@ def snake_move():
     if keys[pygame.K_DOWN] and snake_y < height - snake_width:
         snake_y += velocity
 
+
 while True:
     screen.fill(black)
     for event in pygame.event.get():
@@ -44,6 +55,13 @@ while True:
     snake_move()
     draw_snake(snake_x, snake_y, snake_length, snake_width)
 
+    draw_fruit(fruit_x, fruit_y)
+
+    if fruit_x - fruit_rad < snake_x + (snake_width / 2) and fruit_x + fruit_rad > snake_x - (snake_width / 2) \
+            and fruit_y - fruit_rad < snake_y + (snake_width / 2) and fruit_y + fruit_rad > snake_y - (snake_width / 2):
+        fruit_x = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+        fruit_y = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+        draw_fruit(fruit_x, fruit_y)
 
     pygame.display.update()
     clock.tick(10)
