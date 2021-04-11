@@ -71,54 +71,63 @@ game_over = False
 
 snakes = []
 snake_length = 1
-while not game_over:
-    screen.fill(black)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
 
-    draw_fruit(fruit_x, fruit_y)
-    snake_move()
 
-    if snake_x <= 0 or snake_x >= width:
-        game_over = True
-        screen.blit(game_over_text, (100, 100))
+def main():
+    global snake_x, snake_y, snake_length, snake_width, game_over, fruit_x, fruit_y, fruit_rad
+    while not game_over:
+        screen.fill(black)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
 
-    if snake_y <= 0 or snake_y >= height:
-        game_over = True
-        screen.blit(game_over_text, (100, 100))
+        draw_fruit(fruit_x, fruit_y)
+        snake_move()
 
-    snake_x += velocity_x
-    snake_y += velocity_y
-
-    print_score(snake_length - 1)
-
-    draw_snake(snake_width, snakes)
-
-    for snake in snakes[:-1]:
-        if snake == [snake_x, snake_y]:
+        if snake_x <= 0 or snake_x >= width:
             game_over = True
             screen.blit(game_over_text, (100, 100))
 
-    snakes.append([snake_x, snake_y])
+        if snake_y <= 0 or snake_y >= height:
+            game_over = True
+            screen.blit(game_over_text, (100, 100))
 
-    if fruit_x - fruit_rad < snake_x + (snake_width / 2) and fruit_x + fruit_rad > snake_x - (snake_width / 2) \
-            and fruit_y - fruit_rad < snake_y + (snake_width / 2) and fruit_y + fruit_rad > snake_y - (snake_width / 2):
-        fruit_x = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
-        fruit_y = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
-        draw_fruit(fruit_x, fruit_y)
-        snake_length += 1
+        snake_x += velocity_x
+        snake_y += velocity_y
 
-    if len(snakes) > snake_length:
-        del snakes[0]
+        print_score(snake_length - 1)
 
-    pygame.display.update()
-    clock.tick(10)
+        draw_snake(snake_width, snakes)
 
-while True:
-    screen.fill(black)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
+        for snake in snakes[:-1]:
+            if snake == [snake_x, snake_y]:
+                game_over = True
+                screen.blit(game_over_text, (100, 100))
+
+        snakes.append([snake_x, snake_y])
+
+        if fruit_x - fruit_rad < snake_x + (snake_width / 2) and fruit_x + fruit_rad > snake_x - (snake_width / 2) \
+                and fruit_y - fruit_rad < snake_y + (snake_width / 2) and fruit_y + fruit_rad > snake_y - (
+                snake_width / 2):
+            fruit_x = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+            fruit_y = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+            draw_fruit(fruit_x, fruit_y)
+            snake_length += 1
+
+        if len(snakes) > snake_length:
+            del snakes[0]
+
+        pygame.display.update()
+        clock.tick(10)
+
+    while True:
+        screen.fill(black)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+
+if __name__ == "__main__":
+    main()
