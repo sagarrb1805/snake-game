@@ -6,6 +6,7 @@ pygame.init()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Snake Game")
 
+yellow = (154, 205, 50)
 green = (0, 255, 0)
 blue = (0, 0, 128)
 black = (0, 0, 0)
@@ -16,29 +17,33 @@ game_over_text = game_over_font.render("GAME OVER!", True, blue)
 
 score_font = pygame.font.SysFont("timesnewroman", 20)
 
-
 snake_width = 10
 snake_x = width / 2
 snake_y = height / 2
+
+fruit_rad = 5
+
 velocity_x = 0
 velocity_y = 0
-fruit_rad = 5
 
 clock = pygame.time.Clock()
 
 fruit_x = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
 fruit_y = (random.randint(5, (width - snake_width))) / 10.0 * 10.0
+
+
 def print_score(score):
-    score_text = score_font.render("SCORE: {}".format(score), True, blue)
+    score_text = score_font.render("SCORE: {}".format(score), True, yellow)
     screen.blit(score_text, (0, 0))
 
-def draw_fruit(fruit_x, fruit_y):
-    pygame.draw.circle(screen, green, (fruit_x, fruit_y), fruit_rad)
+
+def draw_fruit(x, y):
+    pygame.draw.circle(screen, green, (x, y), fruit_rad)
 
 
-def draw_snake(snake_width, snakes):
-    for snake in snakes:
-        pygame.draw.rect(screen, red, [snake[0], snake[1], snake_width, snake_width])
+def draw_snake(snake_size, snake_list):
+    for sn in snake_list:
+        pygame.draw.rect(screen, red, [sn[0], sn[1], snake_size, snake_size])
 
 
 def snake_move():
@@ -61,6 +66,7 @@ def snake_move():
         velocity_y = 10
         velocity_x = 0
 
+
 game_over = False
 
 snakes = []
@@ -82,7 +88,6 @@ while not game_over:
     if snake_y <= 0 or snake_y >= height:
         game_over = True
         screen.blit(game_over_text, (100, 100))
-
 
     snake_x += velocity_x
     snake_y += velocity_y
